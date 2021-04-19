@@ -40,6 +40,7 @@ import {StateService, UIRouterModule} from '@uirouter/angular';
 import {HookService} from '../plugins/hook-service';
 
 import {OpenprojectAccessibilityModule} from 'core-app/modules/a11y/openproject-a11y.module';
+import {DynamicFormsModule} from "core-app/modules/common/dynamic-forms/dynamic-forms.module";
 
 import {IconTriggeredContextMenuComponent} from 'core-components/op-context-menu/icon-triggered-context-menu/icon-triggered-context-menu.component';
 import {CurrentProjectService} from 'core-components/projects/current-project.service';
@@ -129,6 +130,7 @@ export function bootstrapModule(injector:Injector) {
 
     DynamicBootstrapModule,
     OpenprojectPrincipalRenderingModule,
+    DynamicFormsModule,
   ],
   exports: [
     // Re-export all commonly used
