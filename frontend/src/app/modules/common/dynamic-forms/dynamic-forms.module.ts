@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 import { FormlyModule } from "@ngx-formly/core";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -16,22 +16,22 @@ import { DateInputComponent } from './components/dynamic-inputs/date-input/date-
 import { DatePickerAdapterComponent } from './components/dynamic-inputs/date-input/components/date-picker-adapter/date-picker-adapter.component';
 import { FormattableTextareaInputComponent } from './components/dynamic-inputs/formattable-textarea-input/formattable-textarea-input.component';
 import { OpenprojectEditorModule } from "core-app/modules/editor/openproject-editor.module";
-import { OpenprojectFieldsModule } from "core-app/modules/fields/openproject-fields.module";
 import { FormattableControlComponent } from './components/dynamic-inputs/formattable-textarea-input/components/formattable-control/formattable-control.component';
 import { OpenprojectCommonModule } from "core-app/modules/common/openproject-common.module";
+import { FormattableEditFieldModule } from "core-app/modules/fields/edit/field-types/formattable-edit-field/formattable-edit-field.module";
+import { DatePickerModule } from "core-app/modules/common/op-date-picker/date-picker.module";
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     FormlyModule.forRoot({
       types: [
-        { name: 'textInput', component: TextInputComponent },
-        { name: 'integerInput', component: IntegerInputComponent },
-        { name: 'selectInput', component: SelectInputComponent },
         { name: 'booleanInput', component: BooleanInputComponent },
+        { name: 'integerInput', component: IntegerInputComponent },
+        { name: 'textInput', component: TextInputComponent },
         { name: 'dateInput', component: DateInputComponent },
+        { name: 'selectInput', component: SelectInputComponent },
         { name: 'formattableInput', component: FormattableTextareaInputComponent },
       ],
       wrappers: [
@@ -42,22 +42,25 @@ import { OpenprojectCommonModule } from "core-app/modules/common/openproject-com
       ]
     }),
     HttpClientModule,
+    OpenprojectCommonModule,
+
+    // Input dependencies
+    DatePickerModule,
     NgSelectModule,
     NgOptionHighlightModule,
+    FormattableEditFieldModule,
     OpenprojectEditorModule,
-    OpenprojectFieldsModule,
-    OpenprojectCommonModule,
   ],
   declarations: [
     DynamicFieldGroupWrapperComponent,
     DynamicFormComponent,
     // Input Types
-    TextInputComponent,
-    IntegerInputComponent,
-    SelectInputComponent,
     BooleanInputComponent,
+    IntegerInputComponent,
+    TextInputComponent,
     DateInputComponent,
     DatePickerAdapterComponent,
+    SelectInputComponent,
     FormattableTextareaInputComponent,
     FormattableControlComponent,
   ],
