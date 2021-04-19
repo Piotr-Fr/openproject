@@ -97,9 +97,11 @@ export class DynamicFieldsService {
   getConfig(formSchema:IOPFormSchema, formPayload:IOPFormModel):IOPFormlyFieldConfig[] {
     const formFieldGroups = formSchema._attributeGroups;
     const fieldSchemas = this._getFieldsSchemasWithKey(formSchema, formPayload);
-    const formlyFields = fieldSchemas.map(fieldSchema => this._getFormlyFieldConfig(fieldSchema));
-    const formlyFormWithFieldGroups = this._getFormlyFormWithFieldGroups(formFieldGroups, formlyFields);
+    const formlyFields = fieldSchemas
+      .map(fieldSchema => this._getFormlyFieldConfig(fieldSchema))
+      .filter(n => n !== null) as IOPFormlyFieldConfig[];
 
+    const formlyFormWithFieldGroups = this._getFormlyFormWithFieldGroups(formFieldGroups, formlyFields);
     return formlyFormWithFieldGroups;
   }
 
@@ -161,9 +163,13 @@ export class DynamicFieldsService {
     }, {});
   }
 
-  private _getFormlyFieldConfig(field:IOPFieldSchemaWithKey):IOPFormlyFieldConfig {
+  private _getFormlyFieldConfig(field:IOPFieldSchemaWithKey):IOPFormlyFieldConfig|null {
     const { key, name:label, required } = field;
-    const { templateOptions, ...fieldTypeConfig } = this._getFieldTypeConfig(field);
+    const maybeFieldTypeConfig = this._getFieldTypeConfig(field);
+    if (!maybeFieldTypeConfig) {
+      return null;
+    }
+    const { templateOptions, ...fieldTypeConfig } = maybeFieldTypeConfig;
     const fieldOptions = this._getFieldOptions(field);
     const formlyFieldConfig = {
       ...fieldTypeConfig,
@@ -180,8 +186,12 @@ export class DynamicFieldsService {
     return formlyFieldConfig;
   }
 
-  private _getFieldTypeConfig(field:IOPFieldSchemaWithKey):IOPFormlyFieldConfig {
+  private _getFieldTypeConfig(field:IOPFieldSchemaWithKey):IOPFormlyFieldConfig|null {
     let inputType = this.inputsCatalogue.find(inputType => inputType.useForFields.includes(field.type))!;
+    if (!inputType) {
+      console.warn(`No input found for input type ${field.type}`);
+      return null;
+    }
     let inputConfig = inputType.config;
     let configCustomizations;
 
